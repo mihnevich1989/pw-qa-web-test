@@ -1,0 +1,19 @@
+{
+  "name": "webpw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test --project=chromium"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.45.3",
+    "@types/node": "^20.14.11"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  }
+}
