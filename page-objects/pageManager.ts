@@ -17,21 +17,21 @@ export class PageManager {
     this.notebookPage = new NotebooksPage(page)
   }
 
-  onCommonComponents() {
+  onCommonComponents(): CommonComponents {
     return this.commonComponents
   }
 
-  onAuthPage() {
+  onAuthPage(): AuthorizationPage {
     return this.authorizationPage
   }
 
-  onNotebookPage() {
+  onNotebookPage(): NotebooksPage {
     return this.notebookPage
   }
 
   async getCsrfToken(): Promise<string> {
-    const body = await (await this.page.request.get('/')).text();
-    const csrfToken = body.match(/<meta name="csrf-token" content="(.+?)"/)
+    const responseAsText = await (await this.page.request.get('/')).text();
+    const csrfToken = responseAsText.match(/<meta name="csrf-token" content="(.+?)"/)
     if (csrfToken) {
       return csrfToken[1];
     } else {
@@ -39,10 +39,11 @@ export class PageManager {
     }
   }
 
-  async loginViaAPI(csrfToken: string, login: string | undefined, pass: string | undefined): Promise<void> {
+  async loginViaAPI(login: string | undefined, pass: string | undefined): Promise<void> {
     if (!login) throw new Error('Login is undefined')
     if (!pass) throw new Error('Password is undefined')
 
+    const csrfToken = await this.getCsrfToken()
     const response = await this.page.request.post(process.env.LOGIN_URL as string, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       form: {
@@ -59,7 +60,6 @@ export class PageManager {
   async clearBasket(): Promise<void> {
     const clearResponse = await this.page.request.post(process.env.CLEAR_BASKET_URL as string)
     expect(clearResponse.status()).toBe(200)
-    const getBasketItems = await (await this.page.request.post(process.env.GET_BASKET_URL as string)).json()
-    expect(getBasketItems.basketCount).toBe(0)
+    await this.onNotebookPage().checkTotalItemsQuantityInBasketByAPI(0)
   }
 }

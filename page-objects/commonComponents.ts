@@ -10,7 +10,7 @@ export class CommonComponents {
     this.navbarUserMenu = '#dropdownUser'
   }
 
-  async checkLoggedIn(user: string | undefined) {
+  async checkLoggedIn(user: string | undefined): Promise<void> {
     if (!user) throw new Error('USER is undefined')
     await expect(this.page.locator(this.navbarUserMenu)).toHaveText(user, { ignoreCase: true })
   }
