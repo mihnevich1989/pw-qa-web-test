@@ -5,7 +5,7 @@ import path from 'path';
 dotenv.config({ path: path.resolve(__dirname, './.env') });
 
 export default defineConfig({
-  testDir: './e2e',
+  testDir: './tests',
   fullyParallel: false,
   retries: 0,
   workers: 1,

@@ -1,25 +1,4 @@
-import { test, expect } from '../../test-options'
-
-test.describe('Notebook page UI', () => {
-
-  test.beforeEach(async ({ page, pm }) => {
-    await pm.loginViaAPI(process.env.TEST_USER_LOGIN, process.env.TEST_USER_PASS)
-    await page.goto('/')
-    await pm.onNotebookPage().isReady()
-  });
-
-  test('should expand the empty basket, and navigate to the basket page', async ({ page, pm }) => {
-    await test.step('caught exception and check it', async () => {
-      page.on('pageerror', exception => {
-        expect(exception.message).not.toContain('showToast is not defined')
-      });
-    })
-
-    await test.step('open basket menu and go to basket page', async () => {
-      await pm.onNotebookPage().openBasketContainerInHeader()
-    })
-  })
-})
+import { test } from '../../../test-options'
 
 test.describe('Notebook page API', async () => {
 
@@ -28,6 +7,7 @@ test.describe('Notebook page API', async () => {
   test.beforeEach(async ({ pm }) => {
     await pm.loginViaAPI(process.env.TEST_USER_LOGIN, process.env.TEST_USER_PASS)
     csrfToken = await pm.getCsrfToken()
+    await pm.clearBasket()
   });
 
   test('adding 1 item and verifying quantity in the basket', async ({ pm }) => {
@@ -62,9 +42,5 @@ test.describe('Notebook page API', async () => {
 
     await pm.onNotebookPage().addItemInBasketByAPI(1, csrfToken, count)
     await pm.onNotebookPage().checkTotalItemsQuantityInBasketByAPI(count)
-  })
-
-  test.afterEach(async ({ pm }) => {
-    await pm.clearBasket()
   })
 })

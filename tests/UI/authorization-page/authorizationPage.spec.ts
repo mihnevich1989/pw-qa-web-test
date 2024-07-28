@@ -1,4 +1,4 @@
-import { test, expect } from '../../test-options'
+import { test, expect } from '../../../test-options'
 
 test.describe('Authorization page', () => {
 
